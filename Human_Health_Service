@@ -1,0 +1,1984 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Importing libraries\n",
+    "import csv\n",
+    "from collections import Counter"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Importing the data from CSV file and storing in food variable.\n",
+    "food = list(csv.DictReader(open('Food_Inspections.csv')))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Problem       : Irregular Casing\n",
+    "#### Solution       : Converting all the text to Upper case \n",
+    "#### Justification: Easy to Comprehend "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "OrderedDict([('\\ufeffInspection ID', '2304308'),\n",
+       "             ('DBA Name', 'ASIAN STATION'),\n",
+       "             ('AKA Name', 'ASIAN STATION'),\n",
+       "             ('License #', '2684167'),\n",
+       "             ('Facility Type', 'Restaurant'),\n",
+       "             ('Risk', 'Risk 1 (High)'),\n",
+       "             ('Address', '1343 W MORSE AVE'),\n",
+       "             ('City', 'CHICAGO'),\n",
+       "             ('State', 'IL'),\n",
+       "             ('Zip', '60626'),\n",
+       "             ('Inspection Date', '08/08/2019'),\n",
+       "             ('Inspection Type', 'License'),\n",
+       "             ('Results', 'Pass w/ Conditions'),\n",
+       "             ('Violations',\n",
+       "              '3. MANAGEMENT, FOOD EMPLOYEE AND CONDITIONAL EMPLOYEE; KNOWLEDGE, RESPONSIBILITIES AND REPORTING - Comments: FOUND NO EMPLOYEE HEALTH POLICY/TRAINING ON SITE. INSTRUCTED FACILITY TO ESTABLISH AN APPROPRIATE EMPLOYEE HEALTH POLICY/TRAINING SYSTEM AND MAINTAIN WITH VERIFIABLE DOCUMENTS ON SITE.  PRIORITY FOUNDATION 7-38-012 NO CITATION ISSUED. - | 23. PROPER DATE MARKING AND DISPOSITION - Comments: DATE MARKING. OBSERVED PREPARED TCS FOODS NOT PROPERLY DATE LABELED. MUST PROPERLY DATE LABELED FOODS WITH AN EXPIRATION DATE NO LONGER THAN 7 DAYS ON TCS FOOD. PRIORITY FOUNDATION VIOLATION:7-38-005. NO CITATION ISSUED  | 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - Comments: ADDITIONAL CLEANING IS NEEDED AT  GREASE TRAP LIDS(UNDER THREE COMPARTMENT SINK AND UNDER THE WOK UNIT) AND PAINT. MILK CRATES USED TO STORE STOCK INSTRUCTED TO REMOVE AND PROVIDE A RAISED SHELF, | 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - Comments: REPLACE ONE STOPPER THAT NOT ABLE TO USE AT THREE COMPARTMENT SINK,DO NOT FIT AT DRAIN TO SEAL. | 53. TOILET FACILITIES: PROPERLY CONSTRUCTED, SUPPLIED, & CLEANED - Comments: A LID IS NEEDED AT  RECEPTACLE INSIDE STAFF WASHROOM. | 55. PHYSICAL FACILITIES INSTALLED, MAINTAINED & CLEAN - Comments: CEMENT FLOOR UNDER AND AROUND  HOT WATER TANK NO CLEANABLE,ROUGH SURFACE,ALSO SEAL FLOOR UNDER COVING/BASEBOARD AT WOK AREA.SURFACE MUST BE SMOOTH,CLEANABLE AND NON-ABSORBENT SURFACE'),\n",
+       "             ('Latitude', '42.00780902250199'),\n",
+       "             ('Longitude', '-87.66542847509838'),\n",
+       "             ('Location', '(42.00780902250199, -87.66542847509838)'),\n",
+       "             ('Historical Wards 2003-2015', '3'),\n",
+       "             ('Zip Codes', '21,853'),\n",
+       "             ('Community Areas', '10'),\n",
+       "             ('Census Tracts', '66'),\n",
+       "             ('Wards', '5')])"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking the first record of the csv file before performing upper case\n",
+    "food[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Converting all the string data to upper case for better Visuals\n",
+    "for row in food:\n",
+    "        row['DBA Name']=row['DBA Name'].upper()\n",
+    "        \n",
+    "        row['AKA Name']=row['AKA Name'].upper()\n",
+    "        \n",
+    "        row['Facility Type']=row['Facility Type'].upper()\n",
+    "        \n",
+    "        row['Risk']=row['Risk'].upper()\n",
+    "        \n",
+    "        row['Address']=row['Address'].upper()\n",
+    "        \n",
+    "        row['City']=row['City'].upper()\n",
+    "        \n",
+    "        row['State']=row['State'].upper()\n",
+    "        \n",
+    "        row['Zip']=row['Zip'].upper()\n",
+    "        \n",
+    "        row['Inspection Type']=row['Inspection Type'].upper()\n",
+    "        \n",
+    "        row['Results']=row['Results'].upper()\n",
+    "        \n",
+    "        row['Violations']=row['Violations'].upper()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "OrderedDict([('\\ufeffInspection ID', '2304308'),\n",
+       "             ('DBA Name', 'ASIAN STATION'),\n",
+       "             ('AKA Name', 'ASIAN STATION'),\n",
+       "             ('License #', '2684167'),\n",
+       "             ('Facility Type', 'RESTAURANT'),\n",
+       "             ('Risk', 'RISK 1 (HIGH)'),\n",
+       "             ('Address', '1343 W MORSE AVE'),\n",
+       "             ('City', 'CHICAGO'),\n",
+       "             ('State', 'IL'),\n",
+       "             ('Zip', '60626'),\n",
+       "             ('Inspection Date', '08/08/2019'),\n",
+       "             ('Inspection Type', 'LICENSE'),\n",
+       "             ('Results', 'PASS W/ CONDITIONS'),\n",
+       "             ('Violations',\n",
+       "              '3. MANAGEMENT, FOOD EMPLOYEE AND CONDITIONAL EMPLOYEE; KNOWLEDGE, RESPONSIBILITIES AND REPORTING - COMMENTS: FOUND NO EMPLOYEE HEALTH POLICY/TRAINING ON SITE. INSTRUCTED FACILITY TO ESTABLISH AN APPROPRIATE EMPLOYEE HEALTH POLICY/TRAINING SYSTEM AND MAINTAIN WITH VERIFIABLE DOCUMENTS ON SITE.  PRIORITY FOUNDATION 7-38-012 NO CITATION ISSUED. - | 23. PROPER DATE MARKING AND DISPOSITION - COMMENTS: DATE MARKING. OBSERVED PREPARED TCS FOODS NOT PROPERLY DATE LABELED. MUST PROPERLY DATE LABELED FOODS WITH AN EXPIRATION DATE NO LONGER THAN 7 DAYS ON TCS FOOD. PRIORITY FOUNDATION VIOLATION:7-38-005. NO CITATION ISSUED  | 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: ADDITIONAL CLEANING IS NEEDED AT  GREASE TRAP LIDS(UNDER THREE COMPARTMENT SINK AND UNDER THE WOK UNIT) AND PAINT. MILK CRATES USED TO STORE STOCK INSTRUCTED TO REMOVE AND PROVIDE A RAISED SHELF, | 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: REPLACE ONE STOPPER THAT NOT ABLE TO USE AT THREE COMPARTMENT SINK,DO NOT FIT AT DRAIN TO SEAL. | 53. TOILET FACILITIES: PROPERLY CONSTRUCTED, SUPPLIED, & CLEANED - COMMENTS: A LID IS NEEDED AT  RECEPTACLE INSIDE STAFF WASHROOM. | 55. PHYSICAL FACILITIES INSTALLED, MAINTAINED & CLEAN - COMMENTS: CEMENT FLOOR UNDER AND AROUND  HOT WATER TANK NO CLEANABLE,ROUGH SURFACE,ALSO SEAL FLOOR UNDER COVING/BASEBOARD AT WOK AREA.SURFACE MUST BE SMOOTH,CLEANABLE AND NON-ABSORBENT SURFACE'),\n",
+       "             ('Latitude', '42.00780902250199'),\n",
+       "             ('Longitude', '-87.66542847509838'),\n",
+       "             ('Location', '(42.00780902250199, -87.66542847509838)'),\n",
+       "             ('Historical Wards 2003-2015', '3'),\n",
+       "             ('Zip Codes', '21,853'),\n",
+       "             ('Community Areas', '10'),\n",
+       "             ('Census Tracts', '66'),\n",
+       "             ('Wards', '5')])"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Re-checking the first record of the file after converting to upper case \n",
+    "food[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Problem: Encountered NULL Value in the data set \n",
+    "#### Solution: Assigning values based on the type of entry\n",
+    "#### Justification : To get a clean and complete data set\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'': 2437})"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Checking the count for NUll in AKA Name\n",
+    "Counter([row['AKA Name'] for row in food if row['AKA Name'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Above result shows that AKA Name has NULL value so replacing all of them with the corresponding DBA Name, as-\n",
+    "# most of the entries in AKA Name is same as the corresponding entries in DBA Name.\n",
+    "# Therefore, the Null values in AKA Name has been replaced with the-\n",
+    "# corresponding DBA Name\n",
+    "for row in food:\n",
+    "    if row['AKA Name'] == '':\n",
+    "        row['AKA Name']+=row['DBA Name']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter()"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Re-checking the count after replacing all the AKA Names with DBA Name\n",
+    "Counter([row['AKA Name'] for row in food if row['AKA Name'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'': 41})"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking if state has any NULL value \n",
+    "Counter([row['State'] for row in food if row['State'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Above result shows that State has NULL values \n",
+    "#Thus, replacing blank states with 'IL', since 'IL' is the state code for the entire data set\n",
+    "for row in food:\n",
+    "      if row['State'] == '' :\n",
+    "            row['State'] = 'IL'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter()"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking the count for state after performing the above opertion \n",
+    "Counter([row['State'] for row in food if row['State'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'': 73})"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking if Risk has any NULL value\n",
+    "Counter([row['Risk'] for row in food if row['Risk'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Above result shows that Risk has NULL values so replacing all the NULL values with 'NA', to get a clean and complete data\n",
+    "for row in food:\n",
+    "    if row['Risk'] == '' :\n",
+    "        row['Risk'] = 'NA'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter()"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking the count after replacing all the Risk with NA\n",
+    "Counter([row['Risk'] for row in food if row['Risk'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'': 50673})"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking if Violations has NULL value\n",
+    "Counter([row['Violations'] for row in food if row['Violations'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Above Result shows that Violations has NULL value so replacing it with NA to get a clean and complete data\n",
+    "for row in food:\n",
+    "    if row['Violations'] == '' :\n",
+    "        row['Violations'] = 'NA'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter()"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking the count after replacing all the Violations with NA\n",
+    "Counter([row['Violations'] for row in food if row['Violations'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'': 1})"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking if Inspection Type has NULL value \n",
+    "Counter([row['Inspection Type'] for row in food if row['Inspection Type'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Above Result shows that Inspection Type has NULL value so replacing it with NA to get a clean and complete data\n",
+    "for row in food:\n",
+    "    if row['Inspection Type'] == '' :\n",
+    "        row['Inspection Type'] = 'NA'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Re-checking the Inspection Type for Inspection ID(1946612)and confirming if the Inspection Type is replaced with 'NA'\n",
+    "for row in food:\n",
+    "    if row['Inspection Type'] == '1946612':\n",
+    "        print (row['Inspection Type'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter()"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking if Inspection Type has NULL value \n",
+    "Counter([row['Inspection Type'] for row in food if row['Inspection Type'] == ''])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'': 132})"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking the count in City column which are NULL\n",
+    "Counter((row['City']) for row in food if row['City']== '')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Above Result shows that City has NULL value so replacing it with NA to get a clean and complete data\n",
+    "for row in food:\n",
+    "      if row['City'] == '' :\n",
+    "            row['City'] = 'NA'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter()"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-Checking the count in City column \n",
+    "Counter((row['City']) for row in food if row['City']== '')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Problem: Incorrect spelling,unwanted paranthesis,backslash and single inverted quote \n",
+    "#### Solution: Using rstrip, lstrip and replace  function to rectify the above problem\n",
+    "#### Justification: To get  a consistent, relevant and efficient data from the data set whenever necessary"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'RESTAURANT': 127145,\n",
+       "         \"CHILDREN'S SERVICES FACILITY\": 2832,\n",
+       "         'DAYCARE ABOVE AND UNDER 2 YEARS': 2253,\n",
+       "         'LIQUOR': 850,\n",
+       "         'GROCERY STORE': 24440,\n",
+       "         'SHARED KITCHEN': 107,\n",
+       "         'DAYCARE (2 - 6 YEARS)': 2656,\n",
+       "         '': 4763,\n",
+       "         'GROCERY/RESTAURANT': 52,\n",
+       "         'BAKERY': 2774,\n",
+       "         'HERBAL LIFE': 3,\n",
+       "         'MOBILE FOOD PREPARER': 596,\n",
+       "         'COFFEE SHOP': 41,\n",
+       "         'HOSPITAL': 527,\n",
+       "         'CATERING': 1133,\n",
+       "         'ICE CREAM SHOP': 24,\n",
+       "         'MOBILE FOOD DISPENSER': 862,\n",
+       "         'WHOLESALE': 532,\n",
+       "         'LONG TERM CARE': 1291,\n",
+       "         'POP-UP FOOD ESTABLISHMENT USER-TIER III': 3,\n",
+       "         'OTHER': 8,\n",
+       "         'DISTRIBUTION CENTER': 5,\n",
+       "         \"1023-CHILDREN'S SERVICES FACILITY\": 27,\n",
+       "         'BANQUET': 68,\n",
+       "         'BREWERY': 16,\n",
+       "         'POP-UP ESTABLISHMENT HOST-TIER II': 9,\n",
+       "         'MOBILE PREPARED FOOD VENDOR': 111,\n",
+       "         'GOLDEN DINER': 548,\n",
+       "         'SHELTER': 97,\n",
+       "         'FITNESS CENTER': 16,\n",
+       "         'TAVERN': 301,\n",
+       "         'SCHOOL': 11962,\n",
+       "         'DAYCARE COMBO 1586': 786,\n",
+       "         'ASSISTED LIVING': 26,\n",
+       "         'BAR': 27,\n",
+       "         'GROCERY/TAVERN': 4,\n",
+       "         'DELI/BAKERY': 1,\n",
+       "         \"1023 CHILDERN'S SERVICES FACILITY\": 33,\n",
+       "         'GROCERY/DELI': 2,\n",
+       "         'COMMISSARY': 29,\n",
+       "         'TAVERN/STORE': 3,\n",
+       "         'DOLLAR TREE': 2,\n",
+       "         'SUPPORTIVE LIVING': 18,\n",
+       "         'FRENCH MARKET SPACE': 5,\n",
+       "         'GAS STATION': 136,\n",
+       "         'SHARED KITCHEN USER (SHORT TERM)': 41,\n",
+       "         'ROOF TOPS': 23,\n",
+       "         'GROCERY/SERVICE GAS STATION': 8,\n",
+       "         'STORE': 41,\n",
+       "         'SPECIAL EVENT': 213,\n",
+       "         'RESTAURANT/GAS STATION': 22,\n",
+       "         'MOBILE FROZEN DESSERTS VENDOR': 57,\n",
+       "         'SHARED KITCHEN USER (LONG TERM)': 196,\n",
+       "         'LIQUOR/COFFEE KIOSK': 3,\n",
+       "         'CHURCH': 38,\n",
+       "         'FROZEN DESSERT PUSHCARTS': 5,\n",
+       "         'TEA BREWING': 7,\n",
+       "         'HEALTH/ JUICE BAR': 14,\n",
+       "         'FOOD BOOTH': 2,\n",
+       "         'DAYCARE (UNDER 2 YEARS)': 246,\n",
+       "         'POULTRY SLAUGHTER': 9,\n",
+       "         'THEATER & RESTAURANT': 6,\n",
+       "         'BANQUET HALL': 162,\n",
+       "         'GYM STORE': 3,\n",
+       "         'CHURCH/SPECIAL EVENTS': 12,\n",
+       "         'ADULT DAYCARE': 3,\n",
+       "         'SLAUGHTER HOUSE/ GROCERY': 14,\n",
+       "         'LIVE POULTRY': 80,\n",
+       "         'GROCERY/BAKERY': 10,\n",
+       "         'COOKING SCHOOL': 27,\n",
+       "         'ROOFTOP': 36,\n",
+       "         'GAS STATION/CONVENIENCE STORE': 2,\n",
+       "         'HELICOPTER TERMINAL': 2,\n",
+       "         'CULINARY CLASS ROOMS': 2,\n",
+       "         'CUSTOM POULTRY SLAUGHTER': 11,\n",
+       "         'ROOFTOPS': 16,\n",
+       "         'CANDY SHOP': 4,\n",
+       "         'STADIUM': 42,\n",
+       "         'HEALTH CARE STORE': 5,\n",
+       "         'MOBILE FOOD': 9,\n",
+       "         'PRIVATE SCHOOL': 56,\n",
+       "         \"1023 CHILDERN'S SERVICE FACILITY\": 10,\n",
+       "         'GROCERY/TAQUERIA': 6,\n",
+       "         'HERBALIFE': 9,\n",
+       "         'CHURCH KITCHEN': 30,\n",
+       "         'DAY CARE 2-14': 7,\n",
+       "         'DAYCARE (2 YEARS)': 47,\n",
+       "         'AIRPORT LOUNGE': 12,\n",
+       "         'MOBILE DESSERTS VENDOR': 22,\n",
+       "         'NURSING HOME': 21,\n",
+       "         '1475 LIQUOR': 2,\n",
+       "         'FOOD PANTRY': 4,\n",
+       "         'VENDING COMMISSARY': 4,\n",
+       "         'BANQUET HALL/CATERING': 7,\n",
+       "         'CHARTER SCHOOL CAFETERIA': 6,\n",
+       "         'CHARTER SCHOOL': 70,\n",
+       "         'ASSISTED LIVING FACILITY': 1,\n",
+       "         'RESTAURANT/GROCERY STORE': 26,\n",
+       "         'COMMISARY RESTAURANT': 1,\n",
+       "         'PUBLIC SHCOOL': 14,\n",
+       "         'EVENT VENU': 2,\n",
+       "         'DAYCARE': 50,\n",
+       "         'REGULATED BUSINESS': 7,\n",
+       "         'RESTAURANT/BAR': 37,\n",
+       "         'CAFETERIA': 56,\n",
+       "         'POP-UP FOOD ESTABLISHMENT USER-TIER II': 1,\n",
+       "         'TAVERN GRILL': 7,\n",
+       "         'PREP INSIDE SCHOOL': 3,\n",
+       "         'GROCERY(GAS STATION)': 2,\n",
+       "         'CONVENIENCE STORE': 67,\n",
+       "         'BANQUET ROOM': 8,\n",
+       "         'DOLLAR STORE': 10,\n",
+       "         'CHILDRENS SERVICES FACILITY': 8,\n",
+       "         'BREWPUB': 10,\n",
+       "         'SUPPORTIVE LIVING FACILITY': 8,\n",
+       "         'CANDY/GELATO': 12,\n",
+       "         'TOBACCO STORE': 2,\n",
+       "         'JUICE BAR': 14,\n",
+       "         'PACKAGED HEALTH FOODS': 2,\n",
+       "         'GROCERY(SUSHI PREP)': 18,\n",
+       "         'SHSHI COUNTER': 1,\n",
+       "         'PALETERIA': 18,\n",
+       "         'SCHOOL CAFETERIA': 7,\n",
+       "         'CAFE/STORE': 7,\n",
+       "         'AFTER SCHOOL PROGRAM': 18,\n",
+       "         'BANQUET FACILITY': 13,\n",
+       "         'ANIMAL SHELTER CAFE PERMIT': 4,\n",
+       "         'GROCERY & RESTAURANT': 25,\n",
+       "         'REHAB CENTER': 10,\n",
+       "         'GROCERY/GAS STATION': 10,\n",
+       "         'LOUNGE': 3,\n",
+       "         'HIGH SCHOOL KITCHEN': 2,\n",
+       "         'FITNESS STUDIO': 3,\n",
+       "         '15 MONTS TO 5 YEARS OLD': 5,\n",
+       "         'BEVERAGE/SILVERWARE WAREHOUSE': 4,\n",
+       "         'CULINARY SCHOOL': 26,\n",
+       "         'GROCERY STORE/GAS STATION': 20,\n",
+       "         'CONVENIENT STORE': 4,\n",
+       "         'VENDING MACHINE': 2,\n",
+       "         'KIOSK': 105,\n",
+       "         'HERBAL MEDICINE': 5,\n",
+       "         'GAS STATION/STORE': 12,\n",
+       "         'DRUG STORE': 4,\n",
+       "         'ASSISTED LIVING SENIOR CARE': 12,\n",
+       "         'RETAIL STORE OFFERS COOKING CLASSES': 7,\n",
+       "         'BANQUETS': 8,\n",
+       "         'GROCERY STORE/COOKING SCHOOL': 10,\n",
+       "         \"1023 CHILDREN'S SERVICES FACILITY\": 5,\n",
+       "         'BANQUET DINING': 11,\n",
+       "         'DAYCARE NIGHT': 11,\n",
+       "         'GROCERY STORE/BAKERY': 15,\n",
+       "         'SENIOR DAY CARE': 8,\n",
+       "         'RIVERWALK': 12,\n",
+       "         'COLLEGE': 12,\n",
+       "         'YOUTH HOUSING': 2,\n",
+       "         'CHURCH (SPECIAL EVENTS)': 5,\n",
+       "         'BANQUET/KITCHEN': 8,\n",
+       "         'CHURCH/SPECIAL EVENT': 3,\n",
+       "         'THEATER': 22,\n",
+       "         'WRIGLEY ROOFTOP': 15,\n",
+       "         'A-NOT-FOR-PROFIT CHEF TRAINING PROGRAM': 8,\n",
+       "         \"CHILDERN'S SERVICE FACILITY\": 6,\n",
+       "         'GROCERY/DOLLAR STORE': 6,\n",
+       "         'RESTAURANT.BANQUET HALLS': 9,\n",
+       "         'ROOFTOP/RESTAURANT': 5,\n",
+       "         'INTERNET CAFE': 1,\n",
+       "         'ROOF TOP': 13,\n",
+       "         'CHARITY AID KITCHEN': 8,\n",
+       "         'HOTEL': 18,\n",
+       "         'SHAKES/TEAS': 1,\n",
+       "         'CLOTHING STORE': 2,\n",
+       "         'NAVY PIER KIOSK': 54,\n",
+       "         'THEATRE': 14,\n",
+       "         'SHUFFLEBOARD CLUB WITH BAR': 3,\n",
+       "         'COFFEE KIOSK': 6,\n",
+       "         'NOT-FOR-PROFIT CLUB': 4,\n",
+       "         'WAREHOUSE': 10,\n",
+       "         'DINING HALL': 5,\n",
+       "         'PUSH CARTS': 4,\n",
+       "         'BUTCHER SHOP': 8,\n",
+       "         'MOVIE THEATER': 11,\n",
+       "         \"O'HARE KIOSK\": 10,\n",
+       "         'RETAIL': 3,\n",
+       "         'UNIVERSITY CAFETERIA': 15,\n",
+       "         'LAUNDROMAT': 4,\n",
+       "         'PASTRY SCHOOL': 11,\n",
+       "         'CHINESE HERBS': 3,\n",
+       "         'EVENT SPACE': 6,\n",
+       "         'DAYCARE 2 YRS TO 12 YRS': 6,\n",
+       "         'HERBALIFE STORE': 1,\n",
+       "         'COLD/FROZEN FOOD STORAGE': 4,\n",
+       "         'GROCERY& RESTAURANT': 11,\n",
+       "         'GAS STATION/MINI MART': 20,\n",
+       "         'JUICE AND SALAD BAR': 5,\n",
+       "         'BEFORE AND AFTER SCHOOL PROGRAM': 7,\n",
+       "         'HERBAL LIFE SHOP': 6,\n",
+       "         'COFFEE CART': 9,\n",
+       "         'FURNITURE STORE': 1,\n",
+       "         'CANDY STORE': 7,\n",
+       "         'MEAT PACKING': 8,\n",
+       "         'LOUNGE/BANQUET HALL': 9,\n",
+       "         'GAS STATION/FOOD': 3,\n",
+       "         'FISH MARKET': 7,\n",
+       "         'GROCERY': 10,\n",
+       "         'REST/GYM': 7,\n",
+       "         'BANQUET ROOMS': 11,\n",
+       "         'TEACHING SCHOOL': 5,\n",
+       "         'POPCORN CORN': 2,\n",
+       "         'HOSTEL': 4,\n",
+       "         'MOVIE THEATRE': 14,\n",
+       "         'SMOOTHIE BAR': 2,\n",
+       "         'HERBAL DRINKS': 2,\n",
+       "         'COFFEE  SHOP': 5,\n",
+       "         'HERBALIFE NUTRITION': 1,\n",
+       "         'DONUT SHOP': 8,\n",
+       "         'LIQOUR BREWERY TASTING': 2,\n",
+       "         'GIFT SHOP': 1,\n",
+       "         'SUMMER FEEDING PREP AREA': 2,\n",
+       "         'CONVENIENCE/DRUG STORE': 9,\n",
+       "         'REST/GROCERY': 9,\n",
+       "         'NORTHERLY ISLAND': 6,\n",
+       "         'HERABALIFE': 3,\n",
+       "         'GROCERY AND BUTCHER': 12,\n",
+       "         'DELI/GROCERY STORE': 2,\n",
+       "         'WHOLESALE & RETAIL': 1,\n",
+       "         'GROCERY/DRUG STORE': 5,\n",
+       "         'MFD TRUCK': 3,\n",
+       "         'WRIGLEY ROOF TOP': 19,\n",
+       "         'DAYCARE COMBO': 6,\n",
+       "         'HERBALIFE/ZUMBA': 3,\n",
+       "         'RESTAURANT(PROTEIN SHAKE BAR)': 8,\n",
+       "         'PRE PACKAGED': 3,\n",
+       "         'WEIGHT LOSS PROGRAM': 4,\n",
+       "         'EMPLOYEE KITCHEN': 12,\n",
+       "         'HOT DOG STATION': 6,\n",
+       "         'KITCHEN DEMO': 2,\n",
+       "         'RESTAURANT/BAR/THEATER': 2,\n",
+       "         'TRUCK': 6,\n",
+       "         'RESTAURANT AND LIQUOR': 1,\n",
+       "         'HERBALCAL': 3,\n",
+       "         'COFFEE/TEA': 3,\n",
+       "         \"CHILDERN'S SERVICES  FACILITY\": 5,\n",
+       "         'HEALTH CENTER': 3,\n",
+       "         'MOBILPREPARED FOOD VENDOR': 3,\n",
+       "         'DAYCARE 6 WKS-5YRS': 3,\n",
+       "         'CONVENIENCE': 52,\n",
+       "         'RETAIL WINE/WINE BAR': 2,\n",
+       "         'GOLF COURSE CONNCESSION STAND': 5,\n",
+       "         'COMMISSARY FOR SOFT SERVE ICE CREAM TRUCKS': 12,\n",
+       "         'DOLLAR & GROCERY STORE': 3,\n",
+       "         'SOCIAL CLUB': 5,\n",
+       "         'MOBILE FOOD TRUCK': 18,\n",
+       "         'GAS': 3,\n",
+       "         'ICE CREAM': 7,\n",
+       "         'GAS STATION/RESTAURANT': 14,\n",
+       "         'PREPACAKAGED FOODS': 1,\n",
+       "         'SNACK SHOP': 5,\n",
+       "         'SMOKEHOUSE': 5,\n",
+       "         '1023': 15,\n",
+       "         'TAP ROOM/TAVERN/LIQUOR STORE': 1,\n",
+       "         'CULINARY ARTS SCHOOL': 8,\n",
+       "         'LONG-TERM CARE': 4,\n",
+       "         'ART GALLERY': 1,\n",
+       "         'MOBILE FROZEN DESSERT VENDOR': 7,\n",
+       "         'MUSEUM/GALLERY': 2,\n",
+       "         'SPA': 1,\n",
+       "         'NIGHT CLUB': 7,\n",
+       "         'DISTRIBUTOR': 2,\n",
+       "         'COFFEE ROASTER': 1,\n",
+       "         'GELATO SHOP': 3,\n",
+       "         'BAKERY/DELI': 11,\n",
+       "         'GAS STATION/STORE GROCERY': 5,\n",
+       "         'GAS STATION STORE': 2,\n",
+       "         'LIQUOR STORE': 6,\n",
+       "         'HERBAL': 1,\n",
+       "         'GROCERY/CAFE': 6,\n",
+       "         'TEA STORE': 2,\n",
+       "         'DRUG/FOOD STORE': 7,\n",
+       "         'SERVICE BAR/THEATRE': 1,\n",
+       "         'RETAIL FOOD/GAS STATION': 4,\n",
+       "         'RESTAURANT/HOSPITAL': 11,\n",
+       "         'GROCERY STORE / GAS STATION': 7,\n",
+       "         'URBAN FARM': 2,\n",
+       "         'MASSAGE BAR': 2,\n",
+       "         'CELL PHONE STORE': 3,\n",
+       "         'HERBAL REMEDY': 3,\n",
+       "         'NUTRITION/HERBALIFE': 2,\n",
+       "         'CONVENIENCE/GAS STATION': 1,\n",
+       "         'GROCERY/ RESTAURANT': 2,\n",
+       "         'GROCERY STORE/ RESTAURANT': 9,\n",
+       "         'ADULT FAMILY CARE CENTER': 3,\n",
+       "         'PUSHCART': 2,\n",
+       "         'CITY OF CHICAGO COLLEGE': 9,\n",
+       "         'LONG TERM CARE FACILITY': 17,\n",
+       "         'TEMPORARY KIOSK': 3,\n",
+       "         \"1023 CHILDERN'S SERVICE S FACILITY\": 8,\n",
+       "         'BOWLING LANES/BANQUETS': 4,\n",
+       "         'REST/ROOFTOP': 8,\n",
+       "         'UNUSED STORAGE': 2,\n",
+       "         'MOBILE FOOD DESSERTS VENDOR': 1,\n",
+       "         'GOLF COURSE': 3,\n",
+       "         'DAY CARE 1023': 4,\n",
+       "         'DRUG/GROCERY STORE': 4,\n",
+       "         'GROCERY/LIQUOR STORE': 1,\n",
+       "         'GAS STATION/ GROCERY STORE': 2,\n",
+       "         'VFW HALL': 2,\n",
+       "         'PACKAGED LIQUOR': 5,\n",
+       "         'WINE STORE': 12,\n",
+       "         'PACKAGED FOOD DISTRIBUTION': 3,\n",
+       "         'RESTAURANT/BAKERY': 7,\n",
+       "         'RETAIL STORE': 4,\n",
+       "         'BAKERY/GROCERY': 3,\n",
+       "         'ART GALLERY W/WINE AND BEER': 2,\n",
+       "         'VIDEO STORE': 4,\n",
+       "         'HEALTH CENTER/NUTRITION CLASSES': 1,\n",
+       "         'BAR/GRILL': 5,\n",
+       "         'HOT DOG CART': 2,\n",
+       "         '1584-DAY CARE ABOVE 2 YEARS': 2,\n",
+       "         'DAY CARE': 3,\n",
+       "         'CATERING/CAFE': 6,\n",
+       "         'DELI': 5,\n",
+       "         '1005 NURSING HOME': 3,\n",
+       "         'MUSIC VENUE': 3,\n",
+       "         'PHARMACY/GROCERY': 6,\n",
+       "         'NEWSSTAND': 4,\n",
+       "         'PROTEIN SHAKE BAR': 1,\n",
+       "         'DRUG STORE/GROCERY': 4,\n",
+       "         'WINE TASTING BAR': 6,\n",
+       "         'DAY SPA': 1,\n",
+       "         'POPCORN SHOP': 2,\n",
+       "         'RIVERWALK CAFE': 5,\n",
+       "         'PANTRY': 9,\n",
+       "         'MAIN KITCHEN': 2,\n",
+       "         'COFFEE': 3,\n",
+       "         'MOBILE FROZEN DESSERT DISP/NON-MOTORIZED': 2,\n",
+       "         'RESTAURANT/GROCERY': 4,\n",
+       "         'CATERED EVENTS': 3,\n",
+       "         'NON -PROFIT': 3,\n",
+       "         'CHILDERN ACTIVITY FACILITY': 2,\n",
+       "         'CATERING AND WHOLESALE': 2,\n",
+       "         'PHARMACY': 4,\n",
+       "         'REPACKAGING PLANT': 1,\n",
+       "         'MOBILE DESSERT VENDOR': 1,\n",
+       "         'MOBILE DESSERT CART': 1,\n",
+       "         'GAS STATION /GROCERY': 5,\n",
+       "         'THEATER/BAR': 4,\n",
+       "         'CAT/LIQUOR': 1,\n",
+       "         'BOOK STORE': 1,\n",
+       "         'CHARTER SCHOOL/CAFETERIA': 2,\n",
+       "         'GROCERY STORE/TAQUERIA': 12,\n",
+       "         'RESTUARANT AND BAR': 9,\n",
+       "         'ILLEGAL VENDOR': 3,\n",
+       "         'GAS STATION /SUBWAY MINI MART.': 2,\n",
+       "         'CAR WASH': 1,\n",
+       "         'CAFE': 2,\n",
+       "         'CONVNIENCE STORE': 2,\n",
+       "         'TAVERN/RESTAURANT': 3,\n",
+       "         'TENT RSTAURANT': 3,\n",
+       "         'ALTERNATIVE SCHOOL': 1,\n",
+       "         'TAVERN-LIQUOR': 1,\n",
+       "         'FOOD VENDING MACHINES': 1,\n",
+       "         'CHICAGO PARK DISTRICT': 1,\n",
+       "         'GROCERY STORE/DELI': 5,\n",
+       "         'TAVERN/1006': 1,\n",
+       "         'ROOM SERVICE': 6,\n",
+       "         'SERVICE GAS STATION': 1,\n",
+       "         'HERBAL STORE': 1,\n",
+       "         'BOYS AND GIRLS CLUB': 2,\n",
+       "         'TAVERN/BAR': 2,\n",
+       "         'LONG-TERM CARE FACILITY': 4,\n",
+       "         'LIQUORE STORE/BAR': 2,\n",
+       "         'MOBILE FROZEN DESSERTS DISPENSER-NON-MOTORIZED': 11,\n",
+       "         'FROZEN DESSERTS DISPENSER-NON-MOTORIZED': 1,\n",
+       "         'POOL': 6,\n",
+       "         'BLOCKBUSTER VIDEO': 2,\n",
+       "         'BANQUETS/ROOM SERVICE': 3,\n",
+       "         'SUMMER FEEDING': 2,\n",
+       "         'FROZEN DESSERTS DISPENSER -NON MOTORIZED': 1,\n",
+       "         'MOBILE FROZEN DESSERTS DISPENSER-NON-MOTOR': 1,\n",
+       "         'MOBILE FROZEN DESSERT DISPENSER_NON  MOTORIZED.': 3,\n",
+       "         'MOBILE FROZEN DESSERTS DISPENSER-NON- MOTORIZED': 1,\n",
+       "         'CHURCH/DAY CARE': 3,\n",
+       "         'GROCERY/BUTCHER': 8,\n",
+       "         'NAIL SHOP': 1,\n",
+       "         'DAYCARE 2-6, UNDER 6': 6,\n",
+       "         'DOLLAR STORE SELLING GROCERY': 1,\n",
+       "         'NON-FOR PROFIT BASEMENT KIT': 1,\n",
+       "         'BAKERY/ RESTAURANT': 2,\n",
+       "         'MEXICAN CANDY STORE': 4,\n",
+       "         'NOT FOR PROFIT': 2,\n",
+       "         'LIVE BUTCHER': 3,\n",
+       "         'MEAT MARKET': 1,\n",
+       "         'DRUG TREATMENT FACILITY': 1,\n",
+       "         'SHARED KITCHEN USER (LONG TREM)': 1,\n",
+       "         'RESTAURANT/LIQUOR': 2,\n",
+       "         'NP-KIOSK': 1,\n",
+       "         'DAY CARE COMBO (1586)': 1,\n",
+       "         'LIQUOR CONSUMPTION ON PREMISES.': 2,\n",
+       "         'MOBIL FOOD 1315': 1,\n",
+       "         'WATERMELON HOUSE': 3,\n",
+       "         'ASSISSTED LIVING': 2,\n",
+       "         'NUTRITION STORE': 2,\n",
+       "         'DAYCARE 1586': 2,\n",
+       "         'FOOD PANTRY/CHURCH': 2,\n",
+       "         'PALETERIA /ICECREAM SHOP': 3,\n",
+       "         'BAKERY/RESTAURANT': 2,\n",
+       "         'CHURCH/AFTER SCHOOL PROGRAM': 1,\n",
+       "         'UNLICENSED FACILITY': 3,\n",
+       "         '(CONVENIENCE STORE)': 1,\n",
+       "         'PEDDLER': 1,\n",
+       "         'GENERAL STORE': 2,\n",
+       "         'AFTER SCHOOL CARE': 1,\n",
+       "         'HOOKA BAR': 1,\n",
+       "         'KIDS CAFE': 1,\n",
+       "         'PREPACKAGE MEAL DISTRIBUTOR (1006 RETAIL)': 1,\n",
+       "         'GIFT/CARD SHOP WITH CANDY': 1,\n",
+       "         '(GAS STATION)': 2,\n",
+       "         'ROOFTOP PATIO': 1,\n",
+       "         'COFFEE VENDING MACHINE': 4,\n",
+       "         'DRUG STORE/W/ FOOD': 1,\n",
+       "         'COMMIASARY': 1,\n",
+       "         'GROCERY/LIQUOR': 1,\n",
+       "         'ICE CREAM PARLOR': 3,\n",
+       "         'PRODUCE STAND': 2,\n",
+       "         \"FARMER'S MARKET\": 1,\n",
+       "         'LINITED BUSINESS': 2,\n",
+       "         'PRODUCE VENDOR': 1,\n",
+       "         'SOUP KITCHEN': 2,\n",
+       "         'HOOKA LOUNGE': 3,\n",
+       "         'CANDY MAKER': 2,\n",
+       "         'RELIGIOUS': 1,\n",
+       "         'TAVERN/LIQUOR': 1,\n",
+       "         'INCUBATOR': 1,\n",
+       "         'CANDY': 3,\n",
+       "         'WHOLESALE BAKERY': 1,\n",
+       "         \"KIDS CAFE'\": 1})"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking for incorrect data\n",
+    "Counter(row['Facility Type'] for row in food)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "436"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking the length of incorrect data\n",
+    "len(Counter(row['Facility Type'] for row in food))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Removing unwanted paranthesis,backslash and single inverted quote by using rstrip, lstrip and replace  function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Rectifying the above problem.\n",
+    "for row in food:\n",
+    "    if row['Facility Type'] == 'DAY CARE 1023':\n",
+    "        continue\n",
+    "        \n",
+    "    elif row['Facility Type'].startswith('1023') and len(row['Facility Type'])>4:\n",
+    "        row['Facility Type'] = \"'1023 CHILDREN'S SERVICES FACILITY'\"#spelling mistake  \n",
+    "        \n",
+    "    elif row['Facility Type'] == '(CONVENIENCE STORE)' or row['Facility Type'] == '(GAS STATION)':\n",
+    "        row['Facility Type'] = row['Facility Type'].lstrip('(')#unwanted paranthesis\n",
+    "        row['Facility Type'] = row['Facility Type'].rstrip(')')#unwanted paranthesis\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'ASSISSTED LIVING': \n",
+    "        row['Facility Type'] = 'ASSISTED LIVING'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'BANQUET ROOMS' or row['Facility Type'] == 'BANQUETS': \n",
+    "        row['Facility Type'] = row['Facility Type'].rstrip('S')#Extra Letter\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'CHARTER SCHOOL/CAFETERIA': \n",
+    "        row['Facility Type'] = row['Facility Type'].replace('/',' ')#Unwanted backslash\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'CHILDERN ACTIVITY FACILITY':\n",
+    "        row['Facility Type'] = row['Facility Type'].replace('CHILDERN','CHILDREN')#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'].startswith(\"CHILDERN'S\") or row['Facility Type'].startswith(\"CHILDRENS\"):\n",
+    "        row['Facility Type'] = \"CHILDREN'S SERVICES FACILITY\"#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'].startswith('CHURCH/SPECIAL'):\n",
+    "        row['Facility Type'] = 'CHURCH(SPECIAL EVENTS)'#unwanted backslash and missing data\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'COMMIASARY':\n",
+    "        row['Facility Type'] = row['Facility Type'].replace('COMMIASARY','COMMISARY')##spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'CONVINIENT STORE':\n",
+    "        row['Facility Type'] = 'CONVINIENCE STORE'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'CONVNIENCE STORE':\n",
+    "        row['Facility Type'] = 'CONVINIENCE STORE'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'].startswith('FROZEN DESSERTS'):\n",
+    "        row['Facility Type'] = 'FROZEN DESSERTS DISPENSER-NON-MOTORIZED'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'GAS STATION/STORE':\n",
+    "        row['Facility Type'] = row['Facility Type'].replace('/',' ')#unwanted backslash\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'HERBALIFE':\n",
+    "        row['Facility Type'] = 'HERBAL LIFE'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'HERBALIFE STORE':\n",
+    "        row['Facility Type'] = 'HERBAL LIFE STORE'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == \"KIDS CAFE'\":   \n",
+    "        row['Facility Type'] = row['Facility Type'].replace(\"'\",'')#unwanted single inverted quote\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'MOBILE DESSERTS VENDOR':\n",
+    "        row['Facility Type'] ='MOBILE DESSERT VENDOR'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'].startswith('MOBILE FROZEN') and 'DISP' in row['Facility Type']: \n",
+    "        row['Facility Type'] ='MOBILE FROZEN DESSERTS DISPENSER-NON-MOTORIZED'##spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'].endswith('TOPS') or row['Facility Type'] == 'ROOFTOP':\n",
+    "        row['Facility Type'] = 'ROOF TOP'#spelling mistake\n",
+    "        \n",
+    "    elif 'TREM)' in row['Facility Type']:\n",
+    "        row['Facility Type'] = 'SHARED KITCHEN USER LONG TERM'#spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'TAVERN/LIQUOR':\n",
+    "        row['Facility Type'] =row['Facility Type'].replace('/','-')#unwanted backslash\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'THEATRE':\n",
+    "        row['Facility Type'] = row['Facility Type'].replace('THEATER','THEATRE')##spelling mistake\n",
+    "        \n",
+    "    elif row['Facility Type'] == 'WRIGLEY ROOFTOP':\n",
+    "        row['Facility Type'] = 'WRIGLEY ROOF TOP'#spelling mistake"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'RESTAURANT': 127145,\n",
+       "         \"CHILDREN'S SERVICES FACILITY\": 2851,\n",
+       "         'DAYCARE ABOVE AND UNDER 2 YEARS': 2253,\n",
+       "         'LIQUOR': 850,\n",
+       "         'GROCERY STORE': 24440,\n",
+       "         'SHARED KITCHEN': 107,\n",
+       "         'DAYCARE (2 - 6 YEARS)': 2656,\n",
+       "         '': 4763,\n",
+       "         'GROCERY/RESTAURANT': 52,\n",
+       "         'BAKERY': 2774,\n",
+       "         'HERBAL LIFE': 12,\n",
+       "         'MOBILE FOOD PREPARER': 596,\n",
+       "         'COFFEE SHOP': 41,\n",
+       "         'HOSPITAL': 527,\n",
+       "         'CATERING': 1133,\n",
+       "         'ICE CREAM SHOP': 24,\n",
+       "         'MOBILE FOOD DISPENSER': 862,\n",
+       "         'WHOLESALE': 532,\n",
+       "         'LONG TERM CARE': 1291,\n",
+       "         'POP-UP FOOD ESTABLISHMENT USER-TIER III': 3,\n",
+       "         'OTHER': 8,\n",
+       "         'DISTRIBUTION CENTER': 5,\n",
+       "         \"'1023 CHILDREN'S SERVICES FACILITY'\": 83,\n",
+       "         'BANQUET': 76,\n",
+       "         'BREWERY': 16,\n",
+       "         'POP-UP ESTABLISHMENT HOST-TIER II': 9,\n",
+       "         'MOBILE PREPARED FOOD VENDOR': 111,\n",
+       "         'GOLDEN DINER': 548,\n",
+       "         'SHELTER': 97,\n",
+       "         'FITNESS CENTER': 16,\n",
+       "         'TAVERN': 301,\n",
+       "         'SCHOOL': 11962,\n",
+       "         'DAYCARE COMBO 1586': 786,\n",
+       "         'ASSISTED LIVING': 28,\n",
+       "         'BAR': 27,\n",
+       "         'GROCERY/TAVERN': 4,\n",
+       "         'DELI/BAKERY': 1,\n",
+       "         'GROCERY/DELI': 2,\n",
+       "         'COMMISSARY': 29,\n",
+       "         'TAVERN/STORE': 3,\n",
+       "         'DOLLAR TREE': 2,\n",
+       "         'SUPPORTIVE LIVING': 18,\n",
+       "         'FRENCH MARKET SPACE': 5,\n",
+       "         'GAS STATION': 138,\n",
+       "         'SHARED KITCHEN USER (SHORT TERM)': 41,\n",
+       "         'ROOF TOP': 88,\n",
+       "         'GROCERY/SERVICE GAS STATION': 8,\n",
+       "         'STORE': 41,\n",
+       "         'SPECIAL EVENT': 213,\n",
+       "         'RESTAURANT/GAS STATION': 22,\n",
+       "         'MOBILE FROZEN DESSERTS VENDOR': 57,\n",
+       "         'SHARED KITCHEN USER (LONG TERM)': 196,\n",
+       "         'LIQUOR/COFFEE KIOSK': 3,\n",
+       "         'CHURCH': 38,\n",
+       "         'FROZEN DESSERT PUSHCARTS': 5,\n",
+       "         'TEA BREWING': 7,\n",
+       "         'HEALTH/ JUICE BAR': 14,\n",
+       "         'FOOD BOOTH': 2,\n",
+       "         'DAYCARE (UNDER 2 YEARS)': 246,\n",
+       "         'POULTRY SLAUGHTER': 9,\n",
+       "         'THEATER & RESTAURANT': 6,\n",
+       "         'BANQUET HALL': 162,\n",
+       "         'GYM STORE': 3,\n",
+       "         'CHURCH(SPECIAL EVENTS)': 15,\n",
+       "         'ADULT DAYCARE': 3,\n",
+       "         'SLAUGHTER HOUSE/ GROCERY': 14,\n",
+       "         'LIVE POULTRY': 80,\n",
+       "         'GROCERY/BAKERY': 10,\n",
+       "         'COOKING SCHOOL': 27,\n",
+       "         'GAS STATION/CONVENIENCE STORE': 2,\n",
+       "         'HELICOPTER TERMINAL': 2,\n",
+       "         'CULINARY CLASS ROOMS': 2,\n",
+       "         'CUSTOM POULTRY SLAUGHTER': 11,\n",
+       "         'CANDY SHOP': 4,\n",
+       "         'STADIUM': 42,\n",
+       "         'HEALTH CARE STORE': 5,\n",
+       "         'MOBILE FOOD': 9,\n",
+       "         'PRIVATE SCHOOL': 56,\n",
+       "         'GROCERY/TAQUERIA': 6,\n",
+       "         'CHURCH KITCHEN': 30,\n",
+       "         'DAY CARE 2-14': 7,\n",
+       "         'DAYCARE (2 YEARS)': 47,\n",
+       "         'AIRPORT LOUNGE': 12,\n",
+       "         'MOBILE DESSERT VENDOR': 23,\n",
+       "         'NURSING HOME': 21,\n",
+       "         '1475 LIQUOR': 2,\n",
+       "         'FOOD PANTRY': 4,\n",
+       "         'VENDING COMMISSARY': 4,\n",
+       "         'BANQUET HALL/CATERING': 7,\n",
+       "         'CHARTER SCHOOL CAFETERIA': 8,\n",
+       "         'CHARTER SCHOOL': 70,\n",
+       "         'ASSISTED LIVING FACILITY': 1,\n",
+       "         'RESTAURANT/GROCERY STORE': 26,\n",
+       "         'COMMISARY RESTAURANT': 1,\n",
+       "         'PUBLIC SHCOOL': 14,\n",
+       "         'EVENT VENU': 2,\n",
+       "         'DAYCARE': 50,\n",
+       "         'REGULATED BUSINESS': 7,\n",
+       "         'RESTAURANT/BAR': 37,\n",
+       "         'CAFETERIA': 56,\n",
+       "         'POP-UP FOOD ESTABLISHMENT USER-TIER II': 1,\n",
+       "         'TAVERN GRILL': 7,\n",
+       "         'PREP INSIDE SCHOOL': 3,\n",
+       "         'GROCERY(GAS STATION)': 2,\n",
+       "         'CONVENIENCE STORE': 68,\n",
+       "         'BANQUET ROOM': 19,\n",
+       "         'DOLLAR STORE': 10,\n",
+       "         'BREWPUB': 10,\n",
+       "         'SUPPORTIVE LIVING FACILITY': 8,\n",
+       "         'CANDY/GELATO': 12,\n",
+       "         'TOBACCO STORE': 2,\n",
+       "         'JUICE BAR': 14,\n",
+       "         'PACKAGED HEALTH FOODS': 2,\n",
+       "         'GROCERY(SUSHI PREP)': 18,\n",
+       "         'SHSHI COUNTER': 1,\n",
+       "         'PALETERIA': 18,\n",
+       "         'SCHOOL CAFETERIA': 7,\n",
+       "         'CAFE/STORE': 7,\n",
+       "         'AFTER SCHOOL PROGRAM': 18,\n",
+       "         'BANQUET FACILITY': 13,\n",
+       "         'ANIMAL SHELTER CAFE PERMIT': 4,\n",
+       "         'GROCERY & RESTAURANT': 25,\n",
+       "         'REHAB CENTER': 10,\n",
+       "         'GROCERY/GAS STATION': 10,\n",
+       "         'LOUNGE': 3,\n",
+       "         'HIGH SCHOOL KITCHEN': 2,\n",
+       "         'FITNESS STUDIO': 3,\n",
+       "         '15 MONTS TO 5 YEARS OLD': 5,\n",
+       "         'BEVERAGE/SILVERWARE WAREHOUSE': 4,\n",
+       "         'CULINARY SCHOOL': 26,\n",
+       "         'GROCERY STORE/GAS STATION': 20,\n",
+       "         'CONVENIENT STORE': 4,\n",
+       "         'VENDING MACHINE': 2,\n",
+       "         'KIOSK': 105,\n",
+       "         'HERBAL MEDICINE': 5,\n",
+       "         'GAS STATION STORE': 14,\n",
+       "         'DRUG STORE': 4,\n",
+       "         'ASSISTED LIVING SENIOR CARE': 12,\n",
+       "         'RETAIL STORE OFFERS COOKING CLASSES': 7,\n",
+       "         'GROCERY STORE/COOKING SCHOOL': 10,\n",
+       "         'BANQUET DINING': 11,\n",
+       "         'DAYCARE NIGHT': 11,\n",
+       "         'GROCERY STORE/BAKERY': 15,\n",
+       "         'SENIOR DAY CARE': 8,\n",
+       "         'RIVERWALK': 12,\n",
+       "         'COLLEGE': 12,\n",
+       "         'YOUTH HOUSING': 2,\n",
+       "         'CHURCH (SPECIAL EVENTS)': 5,\n",
+       "         'BANQUET/KITCHEN': 8,\n",
+       "         'THEATER': 22,\n",
+       "         'WRIGLEY ROOF TOP': 34,\n",
+       "         'A-NOT-FOR-PROFIT CHEF TRAINING PROGRAM': 8,\n",
+       "         'GROCERY/DOLLAR STORE': 6,\n",
+       "         'RESTAURANT.BANQUET HALLS': 9,\n",
+       "         'ROOFTOP/RESTAURANT': 5,\n",
+       "         'INTERNET CAFE': 1,\n",
+       "         'CHARITY AID KITCHEN': 8,\n",
+       "         'HOTEL': 18,\n",
+       "         'SHAKES/TEAS': 1,\n",
+       "         'CLOTHING STORE': 2,\n",
+       "         'NAVY PIER KIOSK': 54,\n",
+       "         'THEATRE': 14,\n",
+       "         'SHUFFLEBOARD CLUB WITH BAR': 3,\n",
+       "         'COFFEE KIOSK': 6,\n",
+       "         'NOT-FOR-PROFIT CLUB': 4,\n",
+       "         'WAREHOUSE': 10,\n",
+       "         'DINING HALL': 5,\n",
+       "         'PUSH CARTS': 4,\n",
+       "         'BUTCHER SHOP': 8,\n",
+       "         'MOVIE THEATER': 11,\n",
+       "         \"O'HARE KIOSK\": 10,\n",
+       "         'RETAIL': 3,\n",
+       "         'UNIVERSITY CAFETERIA': 15,\n",
+       "         'LAUNDROMAT': 4,\n",
+       "         'PASTRY SCHOOL': 11,\n",
+       "         'CHINESE HERBS': 3,\n",
+       "         'EVENT SPACE': 6,\n",
+       "         'DAYCARE 2 YRS TO 12 YRS': 6,\n",
+       "         'HERBAL LIFE STORE': 1,\n",
+       "         'COLD/FROZEN FOOD STORAGE': 4,\n",
+       "         'GROCERY& RESTAURANT': 11,\n",
+       "         'GAS STATION/MINI MART': 20,\n",
+       "         'JUICE AND SALAD BAR': 5,\n",
+       "         'BEFORE AND AFTER SCHOOL PROGRAM': 7,\n",
+       "         'HERBAL LIFE SHOP': 6,\n",
+       "         'COFFEE CART': 9,\n",
+       "         'FURNITURE STORE': 1,\n",
+       "         'CANDY STORE': 7,\n",
+       "         'MEAT PACKING': 8,\n",
+       "         'LOUNGE/BANQUET HALL': 9,\n",
+       "         'GAS STATION/FOOD': 3,\n",
+       "         'FISH MARKET': 7,\n",
+       "         'GROCERY': 10,\n",
+       "         'REST/GYM': 7,\n",
+       "         'TEACHING SCHOOL': 5,\n",
+       "         'POPCORN CORN': 2,\n",
+       "         'HOSTEL': 4,\n",
+       "         'MOVIE THEATRE': 14,\n",
+       "         'SMOOTHIE BAR': 2,\n",
+       "         'HERBAL DRINKS': 2,\n",
+       "         'COFFEE  SHOP': 5,\n",
+       "         'HERBALIFE NUTRITION': 1,\n",
+       "         'DONUT SHOP': 8,\n",
+       "         'LIQOUR BREWERY TASTING': 2,\n",
+       "         'GIFT SHOP': 1,\n",
+       "         'SUMMER FEEDING PREP AREA': 2,\n",
+       "         'CONVENIENCE/DRUG STORE': 9,\n",
+       "         'REST/GROCERY': 9,\n",
+       "         'NORTHERLY ISLAND': 6,\n",
+       "         'HERABALIFE': 3,\n",
+       "         'GROCERY AND BUTCHER': 12,\n",
+       "         'DELI/GROCERY STORE': 2,\n",
+       "         'WHOLESALE & RETAIL': 1,\n",
+       "         'GROCERY/DRUG STORE': 5,\n",
+       "         'MFD TRUCK': 3,\n",
+       "         'DAYCARE COMBO': 6,\n",
+       "         'HERBALIFE/ZUMBA': 3,\n",
+       "         'RESTAURANT(PROTEIN SHAKE BAR)': 8,\n",
+       "         'PRE PACKAGED': 3,\n",
+       "         'WEIGHT LOSS PROGRAM': 4,\n",
+       "         'EMPLOYEE KITCHEN': 12,\n",
+       "         'HOT DOG STATION': 6,\n",
+       "         'KITCHEN DEMO': 2,\n",
+       "         'RESTAURANT/BAR/THEATER': 2,\n",
+       "         'TRUCK': 6,\n",
+       "         'RESTAURANT AND LIQUOR': 1,\n",
+       "         'HERBALCAL': 3,\n",
+       "         'COFFEE/TEA': 3,\n",
+       "         'HEALTH CENTER': 3,\n",
+       "         'MOBILPREPARED FOOD VENDOR': 3,\n",
+       "         'DAYCARE 6 WKS-5YRS': 3,\n",
+       "         'CONVENIENCE': 52,\n",
+       "         'RETAIL WINE/WINE BAR': 2,\n",
+       "         'GOLF COURSE CONNCESSION STAND': 5,\n",
+       "         'COMMISSARY FOR SOFT SERVE ICE CREAM TRUCKS': 12,\n",
+       "         'DOLLAR & GROCERY STORE': 3,\n",
+       "         'SOCIAL CLUB': 5,\n",
+       "         'MOBILE FOOD TRUCK': 18,\n",
+       "         'GAS': 3,\n",
+       "         'ICE CREAM': 7,\n",
+       "         'GAS STATION/RESTAURANT': 14,\n",
+       "         'PREPACAKAGED FOODS': 1,\n",
+       "         'SNACK SHOP': 5,\n",
+       "         'SMOKEHOUSE': 5,\n",
+       "         '1023': 15,\n",
+       "         'TAP ROOM/TAVERN/LIQUOR STORE': 1,\n",
+       "         'CULINARY ARTS SCHOOL': 8,\n",
+       "         'LONG-TERM CARE': 4,\n",
+       "         'ART GALLERY': 1,\n",
+       "         'MOBILE FROZEN DESSERT VENDOR': 7,\n",
+       "         'MUSEUM/GALLERY': 2,\n",
+       "         'SPA': 1,\n",
+       "         'NIGHT CLUB': 7,\n",
+       "         'DISTRIBUTOR': 2,\n",
+       "         'COFFEE ROASTER': 1,\n",
+       "         'GELATO SHOP': 3,\n",
+       "         'BAKERY/DELI': 11,\n",
+       "         'GAS STATION/STORE GROCERY': 5,\n",
+       "         'LIQUOR STORE': 6,\n",
+       "         'HERBAL': 1,\n",
+       "         'GROCERY/CAFE': 6,\n",
+       "         'TEA STORE': 2,\n",
+       "         'DRUG/FOOD STORE': 7,\n",
+       "         'SERVICE BAR/THEATRE': 1,\n",
+       "         'RETAIL FOOD/GAS STATION': 4,\n",
+       "         'RESTAURANT/HOSPITAL': 11,\n",
+       "         'GROCERY STORE / GAS STATION': 7,\n",
+       "         'URBAN FARM': 2,\n",
+       "         'MASSAGE BAR': 2,\n",
+       "         'CELL PHONE STORE': 3,\n",
+       "         'HERBAL REMEDY': 3,\n",
+       "         'NUTRITION/HERBALIFE': 2,\n",
+       "         'CONVENIENCE/GAS STATION': 1,\n",
+       "         'GROCERY/ RESTAURANT': 2,\n",
+       "         'GROCERY STORE/ RESTAURANT': 9,\n",
+       "         'ADULT FAMILY CARE CENTER': 3,\n",
+       "         'PUSHCART': 2,\n",
+       "         'CITY OF CHICAGO COLLEGE': 9,\n",
+       "         'LONG TERM CARE FACILITY': 17,\n",
+       "         'TEMPORARY KIOSK': 3,\n",
+       "         'BOWLING LANES/BANQUETS': 4,\n",
+       "         'REST/ROOFTOP': 8,\n",
+       "         'UNUSED STORAGE': 2,\n",
+       "         'MOBILE FOOD DESSERTS VENDOR': 1,\n",
+       "         'GOLF COURSE': 3,\n",
+       "         'DAY CARE 1023': 4,\n",
+       "         'DRUG/GROCERY STORE': 4,\n",
+       "         'GROCERY/LIQUOR STORE': 1,\n",
+       "         'GAS STATION/ GROCERY STORE': 2,\n",
+       "         'VFW HALL': 2,\n",
+       "         'PACKAGED LIQUOR': 5,\n",
+       "         'WINE STORE': 12,\n",
+       "         'PACKAGED FOOD DISTRIBUTION': 3,\n",
+       "         'RESTAURANT/BAKERY': 7,\n",
+       "         'RETAIL STORE': 4,\n",
+       "         'BAKERY/GROCERY': 3,\n",
+       "         'ART GALLERY W/WINE AND BEER': 2,\n",
+       "         'VIDEO STORE': 4,\n",
+       "         'HEALTH CENTER/NUTRITION CLASSES': 1,\n",
+       "         'BAR/GRILL': 5,\n",
+       "         'HOT DOG CART': 2,\n",
+       "         '1584-DAY CARE ABOVE 2 YEARS': 2,\n",
+       "         'DAY CARE': 3,\n",
+       "         'CATERING/CAFE': 6,\n",
+       "         'DELI': 5,\n",
+       "         '1005 NURSING HOME': 3,\n",
+       "         'MUSIC VENUE': 3,\n",
+       "         'PHARMACY/GROCERY': 6,\n",
+       "         'NEWSSTAND': 4,\n",
+       "         'PROTEIN SHAKE BAR': 1,\n",
+       "         'DRUG STORE/GROCERY': 4,\n",
+       "         'WINE TASTING BAR': 6,\n",
+       "         'DAY SPA': 1,\n",
+       "         'POPCORN SHOP': 2,\n",
+       "         'RIVERWALK CAFE': 5,\n",
+       "         'PANTRY': 9,\n",
+       "         'MAIN KITCHEN': 2,\n",
+       "         'COFFEE': 3,\n",
+       "         'MOBILE FROZEN DESSERTS DISPENSER-NON-MOTORIZED': 18,\n",
+       "         'RESTAURANT/GROCERY': 4,\n",
+       "         'CATERED EVENTS': 3,\n",
+       "         'NON -PROFIT': 3,\n",
+       "         'CHILDREN ACTIVITY FACILITY': 2,\n",
+       "         'CATERING AND WHOLESALE': 2,\n",
+       "         'PHARMACY': 4,\n",
+       "         'REPACKAGING PLANT': 1,\n",
+       "         'MOBILE DESSERT CART': 1,\n",
+       "         'GAS STATION /GROCERY': 5,\n",
+       "         'THEATER/BAR': 4,\n",
+       "         'CAT/LIQUOR': 1,\n",
+       "         'BOOK STORE': 1,\n",
+       "         'GROCERY STORE/TAQUERIA': 12,\n",
+       "         'RESTUARANT AND BAR': 9,\n",
+       "         'ILLEGAL VENDOR': 3,\n",
+       "         'GAS STATION /SUBWAY MINI MART.': 2,\n",
+       "         'CAR WASH': 1,\n",
+       "         'CAFE': 2,\n",
+       "         'CONVINIENCE STORE': 2,\n",
+       "         'TAVERN/RESTAURANT': 3,\n",
+       "         'TENT RSTAURANT': 3,\n",
+       "         'ALTERNATIVE SCHOOL': 1,\n",
+       "         'TAVERN-LIQUOR': 2,\n",
+       "         'FOOD VENDING MACHINES': 1,\n",
+       "         'CHICAGO PARK DISTRICT': 1,\n",
+       "         'GROCERY STORE/DELI': 5,\n",
+       "         'TAVERN/1006': 1,\n",
+       "         'ROOM SERVICE': 6,\n",
+       "         'SERVICE GAS STATION': 1,\n",
+       "         'HERBAL STORE': 1,\n",
+       "         'BOYS AND GIRLS CLUB': 2,\n",
+       "         'TAVERN/BAR': 2,\n",
+       "         'LONG-TERM CARE FACILITY': 4,\n",
+       "         'LIQUORE STORE/BAR': 2,\n",
+       "         'FROZEN DESSERTS DISPENSER-NON-MOTORIZED': 2,\n",
+       "         'POOL': 6,\n",
+       "         'BLOCKBUSTER VIDEO': 2,\n",
+       "         'BANQUETS/ROOM SERVICE': 3,\n",
+       "         'SUMMER FEEDING': 2,\n",
+       "         'CHURCH/DAY CARE': 3,\n",
+       "         'GROCERY/BUTCHER': 8,\n",
+       "         'NAIL SHOP': 1,\n",
+       "         'DAYCARE 2-6, UNDER 6': 6,\n",
+       "         'DOLLAR STORE SELLING GROCERY': 1,\n",
+       "         'NON-FOR PROFIT BASEMENT KIT': 1,\n",
+       "         'BAKERY/ RESTAURANT': 2,\n",
+       "         'MEXICAN CANDY STORE': 4,\n",
+       "         'NOT FOR PROFIT': 2,\n",
+       "         'LIVE BUTCHER': 3,\n",
+       "         'MEAT MARKET': 1,\n",
+       "         'DRUG TREATMENT FACILITY': 1,\n",
+       "         'SHARED KITCHEN USER LONG TERM': 1,\n",
+       "         'RESTAURANT/LIQUOR': 2,\n",
+       "         'NP-KIOSK': 1,\n",
+       "         'DAY CARE COMBO (1586)': 1,\n",
+       "         'LIQUOR CONSUMPTION ON PREMISES.': 2,\n",
+       "         'MOBIL FOOD 1315': 1,\n",
+       "         'WATERMELON HOUSE': 3,\n",
+       "         'NUTRITION STORE': 2,\n",
+       "         'DAYCARE 1586': 2,\n",
+       "         'FOOD PANTRY/CHURCH': 2,\n",
+       "         'PALETERIA /ICECREAM SHOP': 3,\n",
+       "         'BAKERY/RESTAURANT': 2,\n",
+       "         'CHURCH/AFTER SCHOOL PROGRAM': 1,\n",
+       "         'UNLICENSED FACILITY': 3,\n",
+       "         'PEDDLER': 1,\n",
+       "         'GENERAL STORE': 2,\n",
+       "         'AFTER SCHOOL CARE': 1,\n",
+       "         'HOOKA BAR': 1,\n",
+       "         'KIDS CAFE': 2,\n",
+       "         'PREPACKAGE MEAL DISTRIBUTOR (1006 RETAIL)': 1,\n",
+       "         'GIFT/CARD SHOP WITH CANDY': 1,\n",
+       "         'ROOFTOP PATIO': 1,\n",
+       "         'COFFEE VENDING MACHINE': 4,\n",
+       "         'DRUG STORE/W/ FOOD': 1,\n",
+       "         'COMMISARY': 1,\n",
+       "         'GROCERY/LIQUOR': 1,\n",
+       "         'ICE CREAM PARLOR': 3,\n",
+       "         'PRODUCE STAND': 2,\n",
+       "         \"FARMER'S MARKET\": 1,\n",
+       "         'LINITED BUSINESS': 2,\n",
+       "         'PRODUCE VENDOR': 1,\n",
+       "         'SOUP KITCHEN': 2,\n",
+       "         'HOOKA LOUNGE': 3,\n",
+       "         'CANDY MAKER': 2,\n",
+       "         'RELIGIOUS': 1,\n",
+       "         'INCUBATOR': 1,\n",
+       "         'CANDY': 3,\n",
+       "         'WHOLESALE BAKERY': 1})"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "##Re-Checking for incorrect data\n",
+    "Counter([row['Facility Type'] for row in food])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "408"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking the length after fixing the incorrect data\n",
+    "len(Counter([row['Facility Type'] for row in food]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'CHICAGO': 190508,\n",
+       "         'SCHAUMBURG': 24,\n",
+       "         'CCHICAGO': 46,\n",
+       "         'CHICAGO.': 2,\n",
+       "         'CHESTNUT STREET': 11,\n",
+       "         'CHICAGOCHICAGO': 7,\n",
+       "         'CHICAGOHICAGO': 2,\n",
+       "         '312CHICAGO': 2,\n",
+       "         'SCHILLER PARK': 3,\n",
+       "         'CHCICAGO': 3,\n",
+       "         'CHARLES A HAYES': 4,\n",
+       "         'CHCHICAGO': 6,\n",
+       "         'CHICAGOI': 3,\n",
+       "         'CHICAGO HEIGHTS': 2,\n",
+       "         'LAKE ZURICH': 1})"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking all the cities which starts with CH\n",
+    "Counter([row['City'] for row in food if 'CH' in row['City']])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#The above result shows that there are lot of spelling mistakes for the city CHICAGO. \n",
+    "#Thus, fixing all the incorrect city name with correct spelling 'CHICAGO'\n",
+    "for row in food:\n",
+    "    if row['City'] == 'CHICAGO.' or row['City'] == 'CHICAGOI':\n",
+    "        row['City'] = 'CHICAGO'\n",
+    "    if row['City'].endswith('CAGO') and row['City']!= 'CHICAGO HEIGHTS' and row['City']!= '312CHICAGO':\n",
+    "        row['City'] = \"CHICAGO\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({'CHICAGO': 190577,\n",
+       "         'SCHAUMBURG': 24,\n",
+       "         'CHESTNUT STREET': 11,\n",
+       "         '312CHICAGO': 2,\n",
+       "         'SCHILLER PARK': 3,\n",
+       "         'CHARLES A HAYES': 4,\n",
+       "         'CHICAGO HEIGHTS': 2,\n",
+       "         'LAKE ZURICH': 1})"
+      ]
+     },
+     "execution_count": 32,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking the count of all cities after fixing the above mentioned mistakes\n",
+    "Counter([row['City'] for row in food if 'CH' in row['City']])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Problem : Extra Space and un-organised data\n",
+    "#### Solution : Used Split function to fix the above problem\n",
+    "#### Justification: To ensure that the data is organised "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'3. MANAGEMENT, FOOD EMPLOYEE AND CONDITIONAL EMPLOYEE; KNOWLEDGE, RESPONSIBILITIES AND REPORTING - COMMENTS: FOUND NO EMPLOYEE HEALTH POLICY/TRAINING ON SITE. INSTRUCTED FACILITY TO ESTABLISH AN APPROPRIATE EMPLOYEE HEALTH POLICY/TRAINING SYSTEM AND MAINTAIN WITH VERIFIABLE DOCUMENTS ON SITE.  PRIORITY FOUNDATION 7-38-012 NO CITATION ISSUED. - | 23. PROPER DATE MARKING AND DISPOSITION - COMMENTS: DATE MARKING. OBSERVED PREPARED TCS FOODS NOT PROPERLY DATE LABELED. MUST PROPERLY DATE LABELED FOODS WITH AN EXPIRATION DATE NO LONGER THAN 7 DAYS ON TCS FOOD. PRIORITY FOUNDATION VIOLATION:7-38-005. NO CITATION ISSUED  | 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: ADDITIONAL CLEANING IS NEEDED AT  GREASE TRAP LIDS(UNDER THREE COMPARTMENT SINK AND UNDER THE WOK UNIT) AND PAINT. MILK CRATES USED TO STORE STOCK INSTRUCTED TO REMOVE AND PROVIDE A RAISED SHELF, | 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: REPLACE ONE STOPPER THAT NOT ABLE TO USE AT THREE COMPARTMENT SINK,DO NOT FIT AT DRAIN TO SEAL. | 53. TOILET FACILITIES: PROPERLY CONSTRUCTED, SUPPLIED, & CLEANED - COMMENTS: A LID IS NEEDED AT  RECEPTACLE INSIDE STAFF WASHROOM. | 55. PHYSICAL FACILITIES INSTALLED, MAINTAINED & CLEAN - COMMENTS: CEMENT FLOOR UNDER AND AROUND  HOT WATER TANK NO CLEANABLE,ROUGH SURFACE,ALSO SEAL FLOOR UNDER COVING/BASEBOARD AT WOK AREA.SURFACE MUST BE SMOOTH,CLEANABLE AND NON-ABSORBENT SURFACE'"
+      ]
+     },
+     "execution_count": 33,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Checking the first record of Violation Column \n",
+    "food[0]['Violations']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# The above result displays the reasons for Violations, in the form of paragraph which-\n",
+    "# makes it difficult to read data and has lot of space between comments \n",
+    "# Thus, using split function to organise the data\n",
+    "for row in food:\n",
+    "    row['Violations'] = row['Violations'].split('|')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['3. MANAGEMENT, FOOD EMPLOYEE AND CONDITIONAL EMPLOYEE; KNOWLEDGE, RESPONSIBILITIES AND REPORTING - COMMENTS: FOUND NO EMPLOYEE HEALTH POLICY/TRAINING ON SITE. INSTRUCTED FACILITY TO ESTABLISH AN APPROPRIATE EMPLOYEE HEALTH POLICY/TRAINING SYSTEM AND MAINTAIN WITH VERIFIABLE DOCUMENTS ON SITE.  PRIORITY FOUNDATION 7-38-012 NO CITATION ISSUED. - ',\n",
+       " ' 23. PROPER DATE MARKING AND DISPOSITION - COMMENTS: DATE MARKING. OBSERVED PREPARED TCS FOODS NOT PROPERLY DATE LABELED. MUST PROPERLY DATE LABELED FOODS WITH AN EXPIRATION DATE NO LONGER THAN 7 DAYS ON TCS FOOD. PRIORITY FOUNDATION VIOLATION:7-38-005. NO CITATION ISSUED  ',\n",
+       " ' 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: ADDITIONAL CLEANING IS NEEDED AT  GREASE TRAP LIDS(UNDER THREE COMPARTMENT SINK AND UNDER THE WOK UNIT) AND PAINT. MILK CRATES USED TO STORE STOCK INSTRUCTED TO REMOVE AND PROVIDE A RAISED SHELF, ',\n",
+       " ' 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: REPLACE ONE STOPPER THAT NOT ABLE TO USE AT THREE COMPARTMENT SINK,DO NOT FIT AT DRAIN TO SEAL. ',\n",
+       " ' 53. TOILET FACILITIES: PROPERLY CONSTRUCTED, SUPPLIED, & CLEANED - COMMENTS: A LID IS NEEDED AT  RECEPTACLE INSIDE STAFF WASHROOM. ',\n",
+       " ' 55. PHYSICAL FACILITIES INSTALLED, MAINTAINED & CLEAN - COMMENTS: CEMENT FLOOR UNDER AND AROUND  HOT WATER TANK NO CLEANABLE,ROUGH SURFACE,ALSO SEAL FLOOR UNDER COVING/BASEBOARD AT WOK AREA.SURFACE MUST BE SMOOTH,CLEANABLE AND NON-ABSORBENT SURFACE']"
+      ]
+     },
+     "execution_count": 35,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Re-checking the first record of Violation Column after performing split function-\n",
+    "# which after exploring becomes easier to read as they are categorized numerically\n",
+    "food[0]['Violations']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Problem: Redundant data in the data set\n",
+    "#### Solution: Using del function to rectify the above problem\n",
+    "#### Justification: An average person does not require Latitude and Longitude to find address -\n",
+    "####  in daily life +  Location column itself contains latitude and longtitude which if required can be fetched from location column"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "OrderedDict([('\\ufeffInspection ID', '2304308'),\n",
+       "             ('DBA Name', 'ASIAN STATION'),\n",
+       "             ('AKA Name', 'ASIAN STATION'),\n",
+       "             ('License #', '2684167'),\n",
+       "             ('Facility Type', 'RESTAURANT'),\n",
+       "             ('Risk', 'RISK 1 (HIGH)'),\n",
+       "             ('Address', '1343 W MORSE AVE'),\n",
+       "             ('City', 'CHICAGO'),\n",
+       "             ('State', 'IL'),\n",
+       "             ('Zip', '60626'),\n",
+       "             ('Inspection Date', '08/08/2019'),\n",
+       "             ('Inspection Type', 'LICENSE'),\n",
+       "             ('Results', 'PASS W/ CONDITIONS'),\n",
+       "             ('Violations',\n",
+       "              ['3. MANAGEMENT, FOOD EMPLOYEE AND CONDITIONAL EMPLOYEE; KNOWLEDGE, RESPONSIBILITIES AND REPORTING - COMMENTS: FOUND NO EMPLOYEE HEALTH POLICY/TRAINING ON SITE. INSTRUCTED FACILITY TO ESTABLISH AN APPROPRIATE EMPLOYEE HEALTH POLICY/TRAINING SYSTEM AND MAINTAIN WITH VERIFIABLE DOCUMENTS ON SITE.  PRIORITY FOUNDATION 7-38-012 NO CITATION ISSUED. - ',\n",
+       "               ' 23. PROPER DATE MARKING AND DISPOSITION - COMMENTS: DATE MARKING. OBSERVED PREPARED TCS FOODS NOT PROPERLY DATE LABELED. MUST PROPERLY DATE LABELED FOODS WITH AN EXPIRATION DATE NO LONGER THAN 7 DAYS ON TCS FOOD. PRIORITY FOUNDATION VIOLATION:7-38-005. NO CITATION ISSUED  ',\n",
+       "               ' 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: ADDITIONAL CLEANING IS NEEDED AT  GREASE TRAP LIDS(UNDER THREE COMPARTMENT SINK AND UNDER THE WOK UNIT) AND PAINT. MILK CRATES USED TO STORE STOCK INSTRUCTED TO REMOVE AND PROVIDE A RAISED SHELF, ',\n",
+       "               ' 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: REPLACE ONE STOPPER THAT NOT ABLE TO USE AT THREE COMPARTMENT SINK,DO NOT FIT AT DRAIN TO SEAL. ',\n",
+       "               ' 53. TOILET FACILITIES: PROPERLY CONSTRUCTED, SUPPLIED, & CLEANED - COMMENTS: A LID IS NEEDED AT  RECEPTACLE INSIDE STAFF WASHROOM. ',\n",
+       "               ' 55. PHYSICAL FACILITIES INSTALLED, MAINTAINED & CLEAN - COMMENTS: CEMENT FLOOR UNDER AND AROUND  HOT WATER TANK NO CLEANABLE,ROUGH SURFACE,ALSO SEAL FLOOR UNDER COVING/BASEBOARD AT WOK AREA.SURFACE MUST BE SMOOTH,CLEANABLE AND NON-ABSORBENT SURFACE']),\n",
+       "             ('Latitude', '42.00780902250199'),\n",
+       "             ('Longitude', '-87.66542847509838'),\n",
+       "             ('Location', '(42.00780902250199, -87.66542847509838)'),\n",
+       "             ('Historical Wards 2003-2015', '3'),\n",
+       "             ('Zip Codes', '21,853'),\n",
+       "             ('Community Areas', '10'),\n",
+       "             ('Census Tracts', '66'),\n",
+       "             ('Wards', '5')])"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking the first record of the csv file which consists of Latitude and  Longtitude\n",
+    "food[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Deleting Latitude and  Longtitude as location contains data of both column\n",
+    "for row in food:\n",
+    "    del row['Latitude']\n",
+    "    del row['Longitude']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "OrderedDict([('\\ufeffInspection ID', '2304308'),\n",
+       "             ('DBA Name', 'ASIAN STATION'),\n",
+       "             ('AKA Name', 'ASIAN STATION'),\n",
+       "             ('License #', '2684167'),\n",
+       "             ('Facility Type', 'RESTAURANT'),\n",
+       "             ('Risk', 'RISK 1 (HIGH)'),\n",
+       "             ('Address', '1343 W MORSE AVE'),\n",
+       "             ('City', 'CHICAGO'),\n",
+       "             ('State', 'IL'),\n",
+       "             ('Zip', '60626'),\n",
+       "             ('Inspection Date', '08/08/2019'),\n",
+       "             ('Inspection Type', 'LICENSE'),\n",
+       "             ('Results', 'PASS W/ CONDITIONS'),\n",
+       "             ('Violations',\n",
+       "              ['3. MANAGEMENT, FOOD EMPLOYEE AND CONDITIONAL EMPLOYEE; KNOWLEDGE, RESPONSIBILITIES AND REPORTING - COMMENTS: FOUND NO EMPLOYEE HEALTH POLICY/TRAINING ON SITE. INSTRUCTED FACILITY TO ESTABLISH AN APPROPRIATE EMPLOYEE HEALTH POLICY/TRAINING SYSTEM AND MAINTAIN WITH VERIFIABLE DOCUMENTS ON SITE.  PRIORITY FOUNDATION 7-38-012 NO CITATION ISSUED. - ',\n",
+       "               ' 23. PROPER DATE MARKING AND DISPOSITION - COMMENTS: DATE MARKING. OBSERVED PREPARED TCS FOODS NOT PROPERLY DATE LABELED. MUST PROPERLY DATE LABELED FOODS WITH AN EXPIRATION DATE NO LONGER THAN 7 DAYS ON TCS FOOD. PRIORITY FOUNDATION VIOLATION:7-38-005. NO CITATION ISSUED  ',\n",
+       "               ' 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: ADDITIONAL CLEANING IS NEEDED AT  GREASE TRAP LIDS(UNDER THREE COMPARTMENT SINK AND UNDER THE WOK UNIT) AND PAINT. MILK CRATES USED TO STORE STOCK INSTRUCTED TO REMOVE AND PROVIDE A RAISED SHELF, ',\n",
+       "               ' 47. FOOD & NON-FOOD CONTACT SURFACES CLEANABLE, PROPERLY DESIGNED, CONSTRUCTED & USED - COMMENTS: REPLACE ONE STOPPER THAT NOT ABLE TO USE AT THREE COMPARTMENT SINK,DO NOT FIT AT DRAIN TO SEAL. ',\n",
+       "               ' 53. TOILET FACILITIES: PROPERLY CONSTRUCTED, SUPPLIED, & CLEANED - COMMENTS: A LID IS NEEDED AT  RECEPTACLE INSIDE STAFF WASHROOM. ',\n",
+       "               ' 55. PHYSICAL FACILITIES INSTALLED, MAINTAINED & CLEAN - COMMENTS: CEMENT FLOOR UNDER AND AROUND  HOT WATER TANK NO CLEANABLE,ROUGH SURFACE,ALSO SEAL FLOOR UNDER COVING/BASEBOARD AT WOK AREA.SURFACE MUST BE SMOOTH,CLEANABLE AND NON-ABSORBENT SURFACE']),\n",
+       "             ('Location', '(42.00780902250199, -87.66542847509838)'),\n",
+       "             ('Historical Wards 2003-2015', '3'),\n",
+       "             ('Zip Codes', '21,853'),\n",
+       "             ('Community Areas', '10'),\n",
+       "             ('Census Tracts', '66'),\n",
+       "             ('Wards', '5')])"
+      ]
+     },
+     "execution_count": 38,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking the first record of the csv file after performing deletion\n",
+    "food[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Problem: No fixed format used\n",
+    "#### Solution: zfill is used to bring the Zip and License columns in the standard format based on the maximum length\n",
+    "#### Justification: To fetch a structured data and maintain uniformity\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "7\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Checking the Maximum length of License\n",
+    "max_length = max([len(row['License #']) for row in food])\n",
+    "print(max_length)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({7: 149047, 5: 34916, 4: 5746, 1: 535, 3: 561, 0: 17, 6: 37, 2: 52})"
+      ]
+     },
+     "execution_count": 40,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Checking length of all the records in License column \n",
+    "Counter(len(row['License #']) for row in food)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Converting all the License field data whose length is less than the maximum length\n",
+    "# Thus,replacing irregular License Length using zfill in order to maintain uniformity,\n",
+    "# as zfill replaces all the null values with 0 by default\n",
+    "for row in food:\n",
+    "    if row['License #']== '':\n",
+    "        row['License #'] = row['License #'].zfill(7)\n",
+    "    elif (len(row['License #']) < max_length):\n",
+    "        row['License #'] = row['License #'].zfill(7)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({7: 190911})"
+      ]
+     },
+     "execution_count": 42,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-checking length of all the records in License column after using Zfill function\n",
+    "Counter(len(row['License #']) for row in food)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "5\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Checking the Maximum length of Zip\n",
+    "max_length = max([len(row['Zip']) for row in food])\n",
+    "print(max_length)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({5: 190863, 0: 48})"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Checking the length of all records of Zip  \n",
+    "Counter(len(row['Zip']) for row in food)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# The above result shows that Zip has Null Values and the maximum length of Zip is 5.\n",
+    "# Thus,replacing all the blank value with 0 in order to maintain uniformity.\n",
+    "# Using zfill to replace all the values with max_length,\n",
+    "# as zfill replaces all the null values with 0 by default\n",
+    "for row in food:\n",
+    "    if row['Zip']=='':\n",
+    "        row['Zip'] = row['Zip'].zfill(max_length)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Counter({5: 190911})"
+      ]
+     },
+     "execution_count": 46,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Re-Checking the length of all records of Zip   \n",
+    "Counter(len(row['Zip']) for row in food)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#writing the cleaned csv file\n",
+    "with open('Food-Inspections-Cleaned.csv',\"w\",newline = '') as food_write:\n",
+    "    data = csv.DictWriter(food_write,list(food[0].keys()))\n",
+    "    data.writeheader()\n",
+    "    data.writerows(food)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
